@@ -365,17 +365,17 @@ library(Quandl)
 Quandl.api_key("xPCxT4avL3ymcTUyvT7N")
 aacay <- Quandl("XHKG/00914", start_date="2013-01-01", end_date="2018-01-01")
 
-getSymbols("0914.HK", from="2013-04-07", to="2018-02-28")
+getSymbols("2018.HK", from="2013-04-07", to="2018-02-28")
 
-head(`0914.HK`)
-tail(`0914.HK`)
-sum(is.na(`0914.HK`))   #### no missing values
+head(`2018.HK`)
+tail(`2018.HK`)
+sum(is.na(`2018.HK`))   #### no missing values
 # dates -> index
-dt=index(`0914.HK`); length(dt); dt[1]; dt[length(dt)]
+dt=index(`2018.HK`); length(dt); dt[1]; dt[length(dt)]
 
 ######################### Plotting ######################################
 #plot data
-chartSeries(`0914.HK`, type = c("auto", "candlesticks", "matchsticks", "bars","line"), 
+chartSeries(`2018.HK`, type = c("auto", "candlesticks", "matchsticks", "bars","line"), 
             subset = NULL,
             show.grid = TRUE, 
             name = NULL,
@@ -388,10 +388,10 @@ chartSeries(`0914.HK`, type = c("auto", "candlesticks", "matchsticks", "bars","l
 #######---> in HK more volitile...????
 
 # plot a subset of the data
-chartSeries(`0914.HK`, subset='2014-01-01/2014-12-31', type='line', name ='0914.HK.Close', TA=NULL)
-chartSeries(`0914.HK`, subset='last 4 months', type='bars', name ='0914.HK.Close', TA=NULL)
+chartSeries(`2018.HK`, subset='2014-01-01/2014-12-31', type='line', name ='0914.HK.Close', TA=NULL)
+chartSeries(`2018.HK`, subset='last 4 months', type='bars', name ='0914.HK.Close', TA=NULL)
 
-chartSeries(`0914.HK`, subset='last 4 months', theme="white", TA=NULL) #draw the chart 
+chartSeries(`2018.HK`, subset='last 4 months', theme="white", TA=NULL) #draw the chart 
 
 addSMA()
 addVo() #add volume 
