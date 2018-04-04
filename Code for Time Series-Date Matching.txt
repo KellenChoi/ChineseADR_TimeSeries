@@ -1,0 +1,67 @@
+#Install and Load all necessary packages
+library(quantmod)
+library(xts)
+setwd("C:/Users/Sam/Desktop/Rengs/Coding Stuff/R/For Time Series/Project/Data")
+
+#Step 1 - Getting Data
+#1.1 HK Data - Source Yahoo
+getSymbols("3311.HK", src="yahoo", from="2013-01-01", to="2018-01-31")
+CCOHY_HK <- as.xts(`3311.HK`)
+write.csv(CCOHY_HK, "1-China State Construction.csv", na = "NA")
+
+date_index_1 <- index(CCOHY_HK)
+#Date index for this stock in Hong Kong Stock Exchange
+sum(is.na(CCOHY_HK))
+#Some NAs in the data
+chart_Series(CCOHY_HK$`3311.HK.Close`)
+#Visual
+
+#1.2 ADR Data - Source Yahoo
+getSymbols("CCOHY", src="yahoo", from="2013-01-01", to="2018-01-31")
+CCOHY_ADR <- as.xts(CCOHY)
+write.csv(CCOHY_ADR, "2-China State Construction.csv", na = "NA")
+
+date_index_2 <- index(CCOHY_ADR)
+#Date index for this stock in ADR
+sum(is.na(CCOHY_ADR))
+#No NAs in the data
+chart_Series(CCOHY_ADR$CCOHY.Close)
+#Visual
+
+#Step 2 - Statistical Analysis specific to this stock
+#2.1 Analysis on HK part
+#2.2 Analysis on ADR part
+#Summary of the Analysis - possibly arrive at a common ARMA Model for Returns on both exchanges
+
+#Step 3 - Matching the Dates and Forming the two Time Series Data to see co-movements
+date_index_union <- as.Date(union(date_index_1, date_index_2))
+
+a <- length(date_index_union)
+HK_close <- rep(1, a)
+ADR_Open <- rep(1, a)
+data_combined <- data.frame(date_index_union, HK_close, ADR_Open)
+
+dummy_dateindex_1 <- match(date_index_union, date_index_1)
+dummy_dateindex_2 <- match(date_index_union, date_index_2)
+temporary_index <- data_combined$date_index_union
+
+
+for(i in 1:a){
+  if(!is.na(dummy_dateindex_1[i])) {
+    data_combined$HK_close[i] = CCOHY_HK$`3311.HK.Close`[index(CCOHY_HK) %in% temporary_index[i]]
+  }
+  
+  if(!is.na(dummy_dateindex_2[i])) {
+    data_combined$ADR_Open[i] = CCOHY_ADR$CCOHY.Open[index(CCOHY_ADR) %in% temporary_index[i]]
+  }
+}
+
+for(i in 1:a){
+  if(data_combined$HK_close[i] == 1) {
+    data_combined$HK_close[i] = data_combined$HK_close[i-1]
+  }
+  
+  if(data_combined$ADR_Open[i] == 1) {
+    data_combined$ADR_Open[i] = data_combined$ADR_Open[i-1]
+  }
+}
